@@ -1,0 +1,173 @@
+// import { useEffect, useState } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import SockJS from "sockjs-client";
+// import Stomp from "stompjs";
+// var stompClient = null;
+// export const ChatPage = () => {
+//   const [messages, setMessages] = useState([]);
+//   const [message, setMessage] = useState();
+//   const navigate = useNavigate();
+//   const [image, setImage] = useState();
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("chat-username");
+//     if (stompClient != null) stompClient.disconnect();
+//     navigate("/login");
+//   };
+//   function showMessage(temp) {
+//     setMessages((prev) => [temp, ...prev]);
+//   }
+//   function connect() {
+//     let socket = new SockJS("http://localhost:8080/ws");
+
+//     stompClient = Stomp.over(socket);
+
+//     stompClient.connect({}, function (frame) {
+//       console.log("Connected : " + frame);
+
+
+//       stompClient.subscribe("/topic/return-to", function (response) {
+//         showMessage(JSON.parse(response.body));
+//       });
+
+      
+//       stompClient.subscribe(
+//         `/user/${localStorage.getItem("chat-username")}/private`,
+//         // onPrivateMessage
+//       );
+//     });
+//   }
+
+//   useEffect(() => {
+//     connect();
+//   }, []);
+
+//   const sendMessage = () => {
+//     stompClient.send(
+//       "/app/message",
+//       {},
+//       JSON.stringify({
+//         senderName: localStorage.getItem("chat-username"),
+//         message: message,
+//         image: image,
+//       })
+//     );
+//     setMessage("");
+//     setImage("");
+//   };
+
+//   async function base64ConversionForImages(e) {
+//     if (e.target.files[0]) {
+//       getBase64(e.target.files[0]);
+//     }
+//   }
+
+//   function getBase64(file) {
+//     let reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = function () {
+//       setImage(reader.result);
+//     };
+//     reader.onerror = function (error) {
+//       console.log("Error", error);
+//     };
+//   }
+//   return (
+//     <div
+//       className="h-screen bg-cover"
+//       style={{ backgroundImage: `url("http://localhost:5173/green.gif")` }}
+//     >
+//       <div className="p-5">
+//         <div className="flex items-center justify-center gap-2">
+//           <input
+//             type="text"
+//             className="rounded-lg p-2 border border-gray-300 w-full max-w-sm"
+//             placeholder="Message"
+//             value={message}
+//             onChange={(e) => setMessage(e.target.value)}
+//           />
+//           <label
+//             htmlFor="file"
+//             className="cursor-pointer p-2 bg-gray-800 text-white rounded"
+//           >
+//             Media
+//           </label>
+//           <input
+//             id="file"
+//             type="file"
+//             onChange={(e) => base64ConversionForImages(e)}
+//             className="hidden"
+//           />
+//           <button
+//             className="p-2 bg-gray-800 text-white rounded"
+//             onClick={sendMessage}
+//           >
+//             Send
+//           </button>
+//           <button
+//             className="p-2 bg-gray-800 text-white rounded"
+//             onClick={handleLogout}
+//           >
+//             Logout
+//           </button>
+//           <Link to="/test" className="p-2 bg-gray-800 text-white rounded">
+//             Test
+//           </Link>
+//         </div>
+//       </div>
+//       <div className="flex justify-start p-5">
+//         <div className="p-2 min-w-[200px] bg-white rounded-xl shadow-md">
+//           hello
+//         </div>
+//         <div className="max-h-[400px] overflow-y-scroll w-full ml-5">
+//           {messages.length > 0 ? (
+//             <div className="bg-white rounded shadow-md p-3 max-w-lg overflow-y-scroll">
+//               {messages.map((message) => (
+//                 <p key={message.id} className="flex flex-col space-y-2">
+//                   <span className="font-bold text-lg">
+//                     {message.senderName}:-
+//                   </span>
+//                   <span>
+//                     {message.message && <p>{message.message}</p>}
+//                     {message.image && (
+//                       <>
+//                         <img
+//                           src={message.image}
+//                           alt="User media"
+//                           className="h-[150px] object-cover"
+//                         />
+//                         <video
+//                           width="320"
+//                           height="240"
+//                           controls
+//                           className="mt-2"
+//                         >
+//                           <source src={message.image} type="video/mp4" />
+//                         </video>
+//                         <a
+//                           href={message.image}
+//                           download="Media"
+//                           target="_blank"
+//                           rel="noreferrer"
+//                           className="block mt-2"
+//                         >
+//                           <button className="p-2 bg-green-600 text-white rounded w-full">
+//                             Download Media
+//                           </button>
+//                         </a>
+//                       </>
+//                     )}
+//                   </span>
+//                 </p>
+//               ))}
+//             </div>
+//           ) : (
+//             <div className="bg-white rounded shadow-md p-3 max-w-2xl overflow-y-scroll">
+//               No Messages
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
